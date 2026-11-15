@@ -1,0 +1,16 @@
+/* the accountant's viewer (caview.js): hidden until a file is open; read-only look */
+html:not(.ca-open) #app, html:not(.ca-open) #cv-banner { display: none; }
+html.ca-open #cv-open { display: none; }
+#cv-drop { border: 2px dashed var(--line, #9bb); border-radius: 14px; padding: 28px 16px; text-align: center; margin: 14px 0; }
+#cv-drop.on { background: var(--soft, #eef6f6); border-color: var(--accent, #0e746a); }
+#cv-err { color: #b3261e; font-weight: 600; }
+.cv-card h2 { margin-top: 0; overflow-wrap: anywhere; }
+.cv-chk input { max-width: 100%; width: 16.5em; }
+.cv-filt { gap: 8px; }
+.cv-filt input[type=search] { min-width: 12em; flex: 1 1 12em; }
+.cv-old { padding-left: 1.1em; }
+.ca-code { font-size: 1.15em; letter-spacing: .03em; overflow-wrap: anywhere; }
+.ca-done { opacity: .7; }
+/* nothing can be changed here: every button that adds or edits a record is hidden */
+html.ca-open [data-form], html.ca-open [data-edit], html.ca-open [data-new], html.ca-open [data-sample], html.ca-open .sample-note, html.ca-open [data-del], html.ca-open [data-pay], html.ca-open [data-paid],
+html.ca-open .card:has(> .quick [data-form]), html.ca-open [data-vprint], html.ca-open select.newdoc, html.ca-open [data-pane] a.btn[href^="http"], html.ca-open .quick [data-act], html.ca-open .app-about, html.ca-open .app-sponsor, html.ca-open [data-open-form] { display: none !important; }
