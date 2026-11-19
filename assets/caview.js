@@ -65,7 +65,7 @@
       r.className = ok ? 'ok-note' : 'bad'; r.textContent = ok ? T('cv.told.ok') : T('cv.told.bad');
     });
     $('[data-cv-comment]').addEventListener('click', function () { commentBox({ kind: 'screen', id: location.hash || '#', label: screenName() }); });
-    $('[data-cv-other]').addEventListener('click', function () { if (confirm(T('cv.confirmother'))) { location.hash = ''; location.reload(); } });
+    $('[data-cv-other]').addEventListener('click', function () { if (NS.okSync(T('cv.confirmother'))) { location.hash = ''; location.reload(); } });
   }
   function screenName() { var s = NS.$('.hub-nav [aria-current="page"]'); return (s ? s.textContent : '') + (location.hash.length > 1 ? ' ' + decodeURIComponent(location.hash.slice(1)) : ''); }
 
@@ -163,6 +163,7 @@
     $('[data-cv-c2]', dd).addEventListener('click', function () { dd.close(); commentBox({ kind: 'doc', id: d.id, label: C.brief(d) }); });
   }
   function accName(a) {
+    if (B.isBank && B.isBank(a)) return B.bankName(a);   /* each bank account by its name (several banks) */
     if (/^p:/.test(a)) { var k = a.slice(2), hit = null; DOCS.some(function (d) { if (d.buyer && B.key(d.buyer.name) === k) { hit = d.buyer.name; return true; } }); return hit || k; }
     var m = { sales: 'Sales', 'sales-return': 'Sales return', cash: 'Cash', bank: 'Bank', 'round-off': 'Round off', 'tds-receivable': 'TDS receivable', 'tds-payable': 'TDS payable', 'tcs-payable': 'TCS payable', purchases: 'Purchases', 'gst-out-cgst': 'Output CGST', 'gst-out-sgst': 'Output SGST', 'gst-out-utgst': 'Output UTGST', 'gst-out-igst': 'Output IGST', 'gst-in-cgst': 'Input CGST', 'gst-in-sgst': 'Input SGST', 'gst-in-igst': 'Input IGST' };
     return m[a] || a.replace(/^exp:/, 'Expense: ').replace(/^inc:/, 'Income: ').replace(/-/g, ' ');
@@ -193,7 +194,7 @@
       var o = m[mo] || (m[mo] = { sales: 0, oc: 0, os: 0, oi: 0, ic: 0, is: 0, ii: 0 });
       B.postings(d).forEach(function (l) {
         var v = r2(l.cr - l.dr);
-        if (l.a === 'sales' || l.a === 'sales-return') o.sales = r2(o.sales + v);
+        if (l.a === 'sales' || l.a === 'sales-return' || l.a.indexOf('sales:') === 0) o.sales = r2(o.sales + v);
         else if (l.a === 'gst-out-cgst') o.oc = r2(o.oc + v); else if (l.a === 'gst-out-sgst' || l.a === 'gst-out-utgst') o.os = r2(o.os + v); else if (l.a === 'gst-out-igst') o.oi = r2(o.oi + v);
         else if (l.a === 'gst-in-cgst') o.ic = r2(o.ic - v); else if (l.a === 'gst-in-sgst') o.is = r2(o.is - v); else if (l.a === 'gst-in-igst') o.ii = r2(o.ii - v);
       });
